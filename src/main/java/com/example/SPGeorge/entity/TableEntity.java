@@ -8,11 +8,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class TableEntity implements Element {
-    private Long id;
-    private String title;
+    private String description;
 
     @Override
-    public void print() {
+    public void print(String indent) {
 
     }
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,11 @@ import java.util.List;
 public class Author {
     private Long id;
     private String name;
+    private String surname;
 
     private final List<Book> books = new ArrayList<>();
     public void addBook(Book book) { books.add(book); }
+    public void print(){
+        System.out.println("Author Name: " + name + " " + surname);
+    }
 }

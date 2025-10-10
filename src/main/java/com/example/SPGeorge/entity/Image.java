@@ -8,10 +8,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Image implements Element {
-    private Long id;
-    private String imageName;
+    private String url;
 
     @Override
-    public void print() {
+    public void print(String indent) {
+        System.out.println(indent + "Image: " + url);
     }
 }

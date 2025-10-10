@@ -4,35 +4,30 @@ import com.example.SPGeorge.entity.*;
 
 public class LibraryApplication {
     public static void main(String[] args) {
+        Book book = new Book(8L, "Cer senin");
 
-        Book firstBook = new Book(8L, "Cer senin");
+        Author author = new Author(6L, "Cristian", "Somber");
+        author.addBook(book);
+        book.addAuthor(author);
 
-        Author cristianSomber= new Author(6L, "Cristian Somber");
-        cristianSomber.addBook(firstBook);
-        firstBook.addAuthor(cristianSomber);
+        Section cap1   = new Section("Capitolul 1");
+        Section cap11  = new Section("Capitolul 1.1");
+        Section cap111 = new Section("Capitolul 1.1.1");
 
-        Chapter capitolUnu = new Chapter(12L, "Amurg");
-        SubChapter subUnu = new SubChapter(13L, "Amurg.1");
-        SubChapter subUnuUnu = new SubChapter(14L, "Amurg.1.1");
-        SubChapter subUnuUnuUnu = new SubChapter(15L, "Amurg.1.1.1");
+        book.addContent(new Paragraph("Mulțumesc celor care ..."));
+        book.addContent(new TableOfContents("Cuprins auto-generat"));
+        book.addContent(cap1);
 
-        capitolUnu.addSubChapter(subUnu);
-        subUnu.addSubChapter(subUnuUnu);
-        subUnuUnu.addSubChapter(subUnuUnuUnu);
-        firstBook.addChapter(capitolUnu);
+        cap1.add(new Paragraph("Moto capitol"));
+        cap1.add(cap11);
 
-        System.out.println("Book: " + firstBook.getTitle());
-        System.out.println("Authors:");
-        for (Author a : firstBook.getAuthors()) {
-            System.out.println(" - " + a.getName());
-        }
+        cap11.add(new Paragraph("Text from subchapter 1.1"));
+        cap11.add(cap111);
 
-        System.out.println("Chapters:");
-        for (Chapter c : firstBook.getChapters()) {
-            System.out.println("  * " + c.getName());
-            for (SubChapter sc : c.getSubChapters()) {
-                System.out.println("    - " + sc.getName());
-            }
-        }
+        cap111.add(new Paragraph("Text from subchapter 1.1.1"));
+        cap111.add(new Image("image://subchapter-1-1-1"));
+        cap111.add(new TableEntity("Tabel exemplu 1.1.1"));
+
+        book.print();
     }
 }
