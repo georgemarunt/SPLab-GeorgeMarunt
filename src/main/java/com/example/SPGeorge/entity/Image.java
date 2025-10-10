@@ -7,8 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Image {
+public class Image implements Element {
     private Long id;
     private String imageName;
 
+    @Override
+    public void print() {
+    }
 }
