@@ -1,33 +1,31 @@
 package com.example.SPGeorge;
 
-import com.example.SPGeorge.entity.*;
+import com.example.SPGeorge.components.ClientComponent;
+import com.example.SPGeorge.components.SingletonComponent;
+import com.example.SPGeorge.components.TransientComponent;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
+@SpringBootApplication
 public class LibraryApplication {
+
     public static void main(String[] args) {
-        Book book = new Book(8L, "Cer senin");
+        ApplicationContext context = SpringApplication.run(LibraryApplication.class, args);
 
-        Author author = new Author(6L, "Cristian", "Somber");
-        author.addBook(book);
-        book.addAuthor(author);
+        TransientComponent transientBean1 = context.getBean(TransientComponent.class);
+        transientBean1.operation();
+        TransientComponent transientBean2 = context.getBean(TransientComponent.class);
+        transientBean2.operation();
 
-        Section cap1   = new Section("Capitolul 1");
-        Section cap11  = new Section("Capitolul 1.1");
-        Section cap111 = new Section("Capitolul 1.1.1");
+        SingletonComponent singletonBean1 = context.getBean(SingletonComponent.class);
+        singletonBean1.operation();
+        SingletonComponent singletonBean2 = context.getBean(SingletonComponent.class);
+        singletonBean2.operation();
 
-        book.addContent(new Paragraph("Mulțumesc celor care ..."));
-        book.addContent(new TableOfContents("Cuprins auto-generat"));
-        book.addContent(cap1);
-
-        cap1.add(new Paragraph("Moto capitol"));
-        cap1.add(cap11);
-
-        cap11.add(new Paragraph("Text from subchapter 1.1"));
-        cap11.add(cap111);
-
-        cap111.add(new Paragraph("Text from subchapter 1.1.1"));
-        cap111.add(new Image("image://subchapter-1-1-1"));
-        cap111.add(new TableEntity("Tabel exemplu 1.1.1"));
-
-        book.print();
+        ClientComponent client1 = context.getBean(ClientComponent.class);
+        client1.operation();
+        ClientComponent client2 = (ClientComponent) context.getBean("clientComponent");
+        client2.operation();
     }
 }
