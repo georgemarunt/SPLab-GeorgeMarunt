@@ -1,5 +1,6 @@
 package com.example.SPGeorge.entity;
 
+import com.example.SPGeorge.helper.strategy.RenderContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,7 @@ public class Image implements Element {
     private String url;
 
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "Image: " + url);
+    public void print(RenderContext renderContext) {
+        System.out.println("Image: " + url);
     }
 }

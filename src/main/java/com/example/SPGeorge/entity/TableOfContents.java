@@ -1,9 +1,9 @@
 package com.example.SPGeorge.entity;
 
+import com.example.SPGeorge.helper.strategy.RenderContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 @Getter
 @Setter
@@ -12,7 +12,7 @@ public class TableOfContents implements Element{
     private String content;
 
     @Override
-    public void print(String indent) {
-        System.out.print(indent + "TableOfContents " + content + "\n");
+    public void print(RenderContext renderContext) {
+        System.out.print("TableOfContents " + content + "\n");
     }
 }

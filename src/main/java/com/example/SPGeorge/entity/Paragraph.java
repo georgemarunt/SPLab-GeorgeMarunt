@@ -1,17 +1,29 @@
 package com.example.SPGeorge.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import com.example.SPGeorge.helper.strategy.AlignLeft;
+import com.example.SPGeorge.helper.strategy.AlignStrategy;
+import com.example.SPGeorge.helper.strategy.RenderContext;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public class Paragraph implements Element{
+@Builder
+public class Paragraph implements Element {
     private String text;
+    private AlignStrategy textAlignment;
+
+    public Paragraph(String text) {
+        this.text = text;
+    }
 
     @Override
-    public void print(String indent) {
-
+    public void print(RenderContext context) {
+        if (textAlignment != null) {
+            textAlignment.render(this, context);
+        } else {
+            new AlignLeft().render(this, context);
+        }
     }
 }

@@ -1,14 +1,16 @@
 package com.example.SPGeorge.entity;
 
+import com.example.SPGeorge.helper.strategy.RenderContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class Section implements Element {
     private String title;
@@ -24,11 +26,11 @@ public class Section implements Element {
     public Element get(int index) { return children.get(index); }
 
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "Section: " + title);
-        String childIndent = indent + "  ";
+    public void print(RenderContext context) {
+        context.println("Section: " + (title == null ? "" : title));
+        RenderContext childCtx = context.withIndent("  ");
         for (Element e : children) {
-            e.print(childIndent);
+            e.print(childCtx);
         }
     }
 }
