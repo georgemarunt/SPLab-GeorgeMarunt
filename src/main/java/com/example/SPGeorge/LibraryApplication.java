@@ -15,7 +15,6 @@ public class LibraryApplication {
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(LibraryApplication.class, args);
 
-        // Component scope demonstrations
         System.out.println("=== Component Scope Demonstrations ===");
         TransientComponent transientBean1 = context.getBean(TransientComponent.class);
         transientBean1.operation();
