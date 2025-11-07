@@ -3,6 +3,8 @@ package com.example.SPGeorge;
 import com.example.SPGeorge.components.ClientComponent;
 import com.example.SPGeorge.components.SingletonComponent;
 import com.example.SPGeorge.components.TransientComponent;
+import com.example.SPGeorge.controller.BookController;
+import com.example.SPGeorge.controller.DemoController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -13,6 +15,8 @@ public class LibraryApplication {
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(LibraryApplication.class, args);
 
+        // Component scope demonstrations
+        System.out.println("=== Component Scope Demonstrations ===");
         TransientComponent transientBean1 = context.getBean(TransientComponent.class);
         transientBean1.operation();
         TransientComponent transientBean2 = context.getBean(TransientComponent.class);
@@ -27,5 +31,17 @@ public class LibraryApplication {
         client1.operation();
         ClientComponent client2 = (ClientComponent) context.getBean("clientComponent");
         client2.operation();
+
+
+        System.out.println("\n Controller Beans ");
+        BookController bookController = context.getBean(BookController.class);
+        System.out.println("BookController bean: " + bookController);
+
+        DemoController demoController = context.getBean(DemoController.class);
+        System.out.println("DemoController bean: " + demoController);
+
+        System.out.println("\n=== Application Started Successfully ===");
+        System.out.println("BookController available at: http://localhost:8080/books");
+        System.out.println("DemoController available at: http://localhost:8080/demo");
     }
 }
