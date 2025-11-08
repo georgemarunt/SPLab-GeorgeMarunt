@@ -43,6 +43,7 @@ public class BookController {
 
     /**
      * POST /books - Creates a new book
+     * Returns the created book with its generated ID
      */
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
