@@ -1,13 +1,15 @@
 package com.example.SPGeorge.pattern.chain;
 
 import com.example.SPGeorge.entity.Book;
-import com.example.SPGeorge.pattern.chain.BookRequestHandler;
+import com.example.SPGeorge.repo.BookRepository;
+
 import java.util.Map;
 
 public class PersistenceHandler extends BookRequestHandler {
-    private final Map<Long, Book> repository;
 
-    public PersistenceHandler(Map<Long, Book> repository) {
+    private final BookRepository repository;
+
+    public PersistenceHandler(BookRepository repository) {
         this.repository = repository;
     }
 
@@ -19,24 +21,26 @@ public class PersistenceHandler extends BookRequestHandler {
         switch (operation) {
             case "GET":
                 Long id = (Long) request.get("id");
-                return repository.get(id);
+                return repository.findById(id).orElse(null);
 
             case "CREATE":
+                Book created = (Book) request.get("book");
+                System.out.println("PersistenceHandler: CREATE handled for ID " + created.getId());
+                return created;
+
             case "UPDATE":
-                Book book = (Book) request.get("book");
-                repository.put(book.getId(), book);
-                System.out.println("PersistenceHandler: Book persisted with ID " + book.getId());
-                return book;
+                Book updated = (Book) request.get("book");
+                System.out.println("PersistenceHandler: UPDATE handled for ID " + updated.getId());
+                return updated;
 
             case "DELETE":
                 Long deleteId = (Long) request.get("id");
-                repository.remove(deleteId);
-                System.out.println("PersistenceHandler: Book deleted with ID " + deleteId);
+                System.out.println("PersistenceHandler: DELETE handled for ID " + deleteId);
                 return true;
 
             default:
                 System.out.println("PersistenceHandler: Unknown operation");
-                return null;
+                return passToNext(request);
         }
     }
 }

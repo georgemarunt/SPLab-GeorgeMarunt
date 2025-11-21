@@ -5,9 +5,14 @@ import com.example.SPGeorge.components.SingletonComponent;
 import com.example.SPGeorge.components.TransientComponent;
 import com.example.SPGeorge.controller.BookController;
 import com.example.SPGeorge.controller.DemoController;
+import com.example.SPGeorge.helper.strategy.AllBooksSubject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class LibraryApplication {
@@ -31,7 +36,6 @@ public class LibraryApplication {
         ClientComponent client2 = (ClientComponent) context.getBean("clientComponent");
         client2.operation();
 
-
         System.out.println("\n Controller Beans ");
         BookController bookController = context.getBean(BookController.class);
         System.out.println("BookController bean: " + bookController);
@@ -42,5 +46,20 @@ public class LibraryApplication {
         System.out.println("\n=== Application Started Successfully ===");
         System.out.println("BookController available at: http://localhost:8080/books");
         System.out.println("DemoController available at: http://localhost:8080/demo");
+    }
+
+    @Bean
+    public AllBooksSubject allBooksSubject() {
+        return new AllBooksSubject();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**");
+            }
+        };
     }
 }

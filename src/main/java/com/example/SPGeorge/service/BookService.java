@@ -1,28 +1,33 @@
 package com.example.SPGeorge.service;
 
 import com.example.SPGeorge.entity.Book;
+import com.example.SPGeorge.pattern.chain.AuthorizationHandler;
+import com.example.SPGeorge.pattern.chain.BookRequestHandler;
+import com.example.SPGeorge.pattern.chain.LoggingHandler;
+import com.example.SPGeorge.pattern.chain.PersistenceHandler;
+import com.example.SPGeorge.pattern.chain.ValidationHandler;
 import com.example.SPGeorge.pattern.command.Command;
 import com.example.SPGeorge.pattern.command.CommandInvoker;
-import com.example.SPGeorge.pattern.chain.BookRequestHandler;
-import com.example.SPGeorge.pattern.chain.*;
 import com.example.SPGeorge.pattern.command.CreateBookCommand;
 import com.example.SPGeorge.pattern.command.DeleteBookCommand;
 import com.example.SPGeorge.pattern.command.UpdateBookCommand;
+import com.example.SPGeorge.repo.BookRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookService {
 
-    private final Map<Long, Book> bookRepository = new ConcurrentHashMap<>();
-    private final AtomicLong idCounter = new AtomicLong(1);
+    private final BookRepository bookRepository;
     private final CommandInvoker commandInvoker = new CommandInvoker();
     private final BookRequestHandler handlerChain;
 
-    public BookService() {
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+
         BookRequestHandler validationHandler = new ValidationHandler();
         BookRequestHandler authorizationHandler = new AuthorizationHandler();
         BookRequestHandler loggingHandler = new LoggingHandler();
@@ -36,35 +41,30 @@ public class BookService {
     }
 
     public List<Book> getAllBooks() {
-        return new ArrayList<>(bookRepository.values());
+        return bookRepository.findAll();
     }
 
     public Book getBookById(Long id) {
         Map<String, Object> request = new HashMap<>();
         request.put("operation", "GET");
         request.put("id", id);
-
         return (Book) handlerChain.handle(request);
     }
 
     public Book createBook(Book book) {
-        if (book.getId() == null) {
-            book.setId(idCounter.getAndIncrement());
-        }
-
-        Command command = new CreateBookCommand(bookRepository, book);
+        CreateBookCommand command = new CreateBookCommand(bookRepository, book);
         commandInvoker.executeCommand(command);
 
         Map<String, Object> request = new HashMap<>();
         request.put("operation", "CREATE");
-        request.put("book", book);
-
+        request.put("book", command.getBook());
         handlerChain.handle(request);
-        return book;
+
+        return command.getBook();
     }
 
     public Book updateBook(Long id, Book book) {
-        if (!bookRepository.containsKey(id)) {
+        if (!bookRepository.existsById(id)) {
             return null;
         }
 
@@ -76,13 +76,13 @@ public class BookService {
         request.put("operation", "UPDATE");
         request.put("id", id);
         request.put("book", book);
-
         handlerChain.handle(request);
+
         return book;
     }
 
     public boolean deleteBook(Long id) {
-        if (!bookRepository.containsKey(id)) {
+        if (!bookRepository.existsById(id)) {
             return false;
         }
 
@@ -92,8 +92,8 @@ public class BookService {
         Map<String, Object> request = new HashMap<>();
         request.put("operation", "DELETE");
         request.put("id", id);
-
         handlerChain.handle(request);
+
         return true;
     }
 

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import com.example.SPGeorge.helper.strategy.RenderContext;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +23,7 @@ public class Book {
 
     private String title;
 
-    @OneToMany(targetEntity = Element.class, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "book_id")
+    @Transient
     private List<Element> elements = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
